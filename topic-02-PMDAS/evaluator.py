@@ -2,6 +2,8 @@ from tokenizer import tokenize
 from parser import parse
 
 def evaluate(ast):
+    if ast["tag"] == "print": 
+        value = evaluate(ast["value"])
     if ast["tag"] == "number":
         return ast["value"]
     if ast["tag"] in ["+","-","*","/"]:
@@ -69,6 +71,11 @@ def test_evaluate_expression():
     assert eval("(1+2)*3") == 9
     assert eval("(1.0+2.1)*3") == 9.3
 
+def test_evaluate_print():
+    print("testing evaluate print")
+    
+
+
 if __name__ == "__main__":
     test_evaluate_number()
     test_evaluate_addition()
@@ -76,4 +83,5 @@ if __name__ == "__main__":
     test_evaluate_multiplication()
     test_evaluate_division()
     test_evaluate_expression()
+    test_evaluate_print()
     print("done.")

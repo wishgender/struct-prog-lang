@@ -109,6 +109,35 @@ def test_parse_expression():
     ast, tokens = parse_expression(tokens)
     assert ast == {'tag': '+', 'left': {'tag': 'number', 'value': 1}, 'right': {'tag': '*', 'left': {'tag': '+', 'left': {'tag': 'number', 'value': 2}, 'right': {'tag': 'number', 'value': 3}}, 'right': {'tag': 'number', 'value': 4}}}
 
+def parse_statement(tokens):
+    """
+    statement= <print> expression | expression
+    """
+
+    if tokens[0]["tag"]=="print":
+        value_ast, tokens = parse_expression(tokens=tokens[1:])
+        ast = {
+            'tag':'print',
+            'value':value_ast
+        }
+    else:
+        ast, tokens = parse_expression(tokens)
+    return ast, tokens
+
+def test_parse_statement():
+    print("testing parse_statement()")
+    tokens = tokenize("1+(2+3)*4")
+    ast, tokens = parse_statement(tokens)
+    assert ast =={'tag': '+', 'left': {'tag': 'number', 'value': 1}, 'right': {'tag': '*', 'left': {'tag': '+', 'left': {'tag': 'number', 'value': 2}, 'right': {'tag': 'number', 'value': 3}}, 'right': {'tag': 'number', 'value': 4}}}
+    # print(ast)
+    print("\tpassed assert 1")
+    tokens = tokenize("print 1*4")
+    ast, tokens = parse_statement(tokens)
+    assert ast == {'tag': 'print', 'value': {'tag': '*', 'left': {'tag': 'number', 'value': 1}, 'right': {'tag': 'number', 'value': 4}}}
+    # print(ast)
+    print("\tpassed assert 2")
+    exit(0)
+
 def parse(tokens):
     ast, tokens = parse_expression(tokens)
     return ast
@@ -117,4 +146,5 @@ if __name__ == "__main__":
     test_parse_factor()
     test_parse_term()
     test_parse_expression()
+    test_parse_statement()
     print("done.")
